@@ -98,8 +98,10 @@ def check_win_scheduled_task(item, params, section):
 
             if 'lastRun' in task:
                 age = now - task['lastRun']
+                if age.total_seconds() < 0: newage = 0
+                else: newage = age.total_seconds()    
                 yield from check_levels(
-                    value=age.total_seconds(),
+                    value=newage,
                     levels_upper=params.get('maxage', None),
                     render_func=render.timespan,
                     label="Last Run",
